@@ -1,5 +1,19 @@
 import * as vscode from 'vscode';
 
+export type MatchItem = {
+    Id: string;
+    Name: string;
+	Description: string;
+	Source: string;
+	URLBase: string;
+}
+
+interface AnnotationContent {
+	LineComment: string;
+	ToolTip: string;
+	URL: string;
+}
+
 /**
  * CodelensProvider
  */
@@ -10,12 +24,31 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 	private _onDidChangeCodeLenses: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
 	public readonly onDidChangeCodeLenses: vscode.Event<void> = this._onDidChangeCodeLenses.event;
 
-	constructor() {
-		this.regex = /(.+)/g;
+	private matchData: {[key: string]: MatchItem} = {};
+
+	constructor(matchData: {[key: string]: MatchItem}) {
+		this.regex = /[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/g;
+		this.matchData = matchData;
 
 		vscode.workspace.onDidChangeConfiguration((_) => {
 			this._onDidChangeCodeLenses.fire();
 		});
+	}
+
+	private matchesToTitles(line: string, match: string): AnnotationContent {
+		if (match in this.matchData) {
+			const item:MatchItem = this.matchData[match];
+			return {
+				LineComment: match + " => " + item.Name + " (" + item.Source + ")",
+				ToolTip: item.Description,
+				URL: item.URLBase.replace("{GUID}", item.Id)
+			}
+		}
+		return {
+			LineComment: "Unknown GUID",
+			ToolTip: "(No tooltip, unknown GUID)",
+			URL: ""
+		}
 	}
 
 	public provideCodeLenses(document: vscode.TextDocument, token: vscode.CancellationToken): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
@@ -31,7 +64,14 @@ export class CodelensProvider implements vscode.CodeLensProvider {
 				const position = new vscode.Position(line.lineNumber, indexOf);
 				const range = document.getWordRangeAtPosition(position, new RegExp(this.regex));
 				if (range) {
-					this.codeLenses.push(new vscode.CodeLens(range));
+					const annotationContent = this.matchesToTitles(line.text, matches[0])
+					this.codeLenses.push(new vscode.CodeLens(range, 
+					{
+						title: annotationContent.LineComment,
+						tooltip: annotationContent.ToolTip,
+						command: "codelens-sample.codelensAction",
+						arguments: [annotationContent.URL, false]
+					}));
 				}
 			}
 			return this.codeLenses;

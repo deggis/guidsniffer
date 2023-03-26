@@ -5,6 +5,8 @@
 		"lib": ["es2020"],
         "outDir": "out",
         "sourceMap": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
         "rootDir": "src",
         /* Strict Type-Checking Option */
         "strict": true,   /* enable all strict type-checking options */

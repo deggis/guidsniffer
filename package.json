@@ -1,14 +1,14 @@
 {
-    "name": "codelens-sample",
-    "displayName": "CodeLens Sample",
-    "description": "Samples for VS Code's CodeLens API",
-    "version": "0.0.1",
-    "publisher": "ms-vscode",
+    "name": "guidsniffer",
+    "displayName": "GUID Sniffer",
+    "description": "Sniffs known GUIDs from any text files",
+    "version": "0.0.3",
+    "publisher": "deggis",
     "private": true,
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Microsoft/vscode-extension-samples"
+        "url": "https://github.com/deggis/guidsniffer"
     },
     "engines": {
         "vscode": "^1.73.0"
@@ -16,8 +16,10 @@
     "categories": [
         "Other"
     ],
+    "icon": "images/hedy-nose.png",
     "activationEvents": [
-        "*"
+        "onStartupFinished",
+        "onFileSystem"
     ],
     "main": "./out/extension",
     "contributes": {
