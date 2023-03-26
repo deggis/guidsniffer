@@ -2,7 +2,7 @@
 
 Status: Experimental POC
 
-In a nutshell: Extension creates annotates the descriptions of some well-known (Microsoft Azure) GUIDs above the line.
+In a nutshell: Extension creates annotates the descriptions of some well-known (Microsoft Azure) GUIDs above the line in editor.
 
 GUIDs are 128-bit identifiers that are not easy for humans to compare, let alone to remember. Despite that, there are "Well-known GUIDs" that frequently come up.
 
