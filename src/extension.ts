@@ -5,13 +5,14 @@ import { CodelensProvider, MatchItem } from './CodelensProvider';
 
 import azureRoleData from './data/azureroles.json';
 import azurePolicyData from './data/azurepolicies.json';
+import azureAdvisorData from './data/azureadvisorrecommendations.json';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
 let disposables: Disposable[] = [];
 
-function convert(data: any, sourceString: string, urlBase: string): { [key: string]: MatchItem } {
+function convert(data: any, sourceString: string, urlBase?: string): { [key: string]: MatchItem } {
 	const result: { [key: string]: any } = {};
 	data.forEach((item: any) => {
 		result[item.Id] = {
@@ -28,8 +29,9 @@ function convert(data: any, sourceString: string, urlBase: string): { [key: stri
 export function activate(context: ExtensionContext) {
 	const roleData: { [key: string]: MatchItem } = convert(azureRoleData, 'Azure Built-In Role', 'https://www.azadvertizer.net/azrolesadvertizer/{GUID}.html');
 	const policyData: { [key: string]: MatchItem } = convert(azurePolicyData, 'Azure Built-In Policy definition', 'https://www.azadvertizer.net/azpolicyadvertizer/{GUID}.html');
+	const advisorData: { [key: string]: MatchItem } = convert(azureAdvisorData, 'Azure Advisor Recommendation');
 
-	const combined = Object.assign({}, roleData, policyData);
+	const combined = Object.assign({}, roleData, policyData, advisorData);
 	const codelensProvider = new CodelensProvider(combined);
 
 	languages.registerCodeLensProvider("*", codelensProvider);
@@ -43,8 +45,12 @@ export function activate(context: ExtensionContext) {
 	});
 
 	commands.registerCommand("codelens-sample.codelensAction", (args: any) => {
-		commands.executeCommand('vscode.open', Uri.parse(args));
-		window.showInformationMessage(`GUID Sniffer opening URL ${args}`);
+		if(args) {
+			commands.executeCommand('vscode.open', Uri.parse(args));
+			window.showInformationMessage(`GUID Sniffer opening URL ${args}`);
+		} else {
+			window.showInformationMessage(`No associated URL.`);
+		}
 	});
 }
 
@@ -55,3 +61,4 @@ export function deactivate() {
 	}
 	disposables = [];
 }
+
