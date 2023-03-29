@@ -2,7 +2,7 @@
     "name": "guidsniffer",
     "displayName": "GUID Sniffer",
     "description": "Sniffs known GUIDs from any text files",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "deggis",
     "private": true,
     "license": "MIT",
@@ -25,19 +25,24 @@
     "contributes": {
         "commands": [
             {
-                "title": "Enable CodeLens",
-                "command": "codelens-sample.enableCodeLens",
-                "category": "CodeLens Sample"
+                "title": "Enable GUID Sniffer",
+                "command": "guidsniffer.enableGUIDSniffer",
+                "category": "GUID Sniffer"
             },
             {
-                "title": "Disable Codelens",
-                "command": "codelens-sample.disableCodeLens",
-                "category": "CodeLens Sample"
+                "title": "Disable GUID Sniffer",
+                "command": "guidsniffer.disableGUIDSniffer",
+                "category": "GUID Sniffer"
+            },
+            {
+                "title": "Show GUID Sniffer status",
+                "command": "guidsniffer.showGUIDSnifferStatus",
+                "category": "GUID Sniffer"
             }
         ],
         "configuration": {
             "properties": {
-                "codelens-sample.enableCodeLens": {
+                "guidsniffer.GUIDSnifferEnabled": {
                     "type": "boolean",
                     "default": true
                 }

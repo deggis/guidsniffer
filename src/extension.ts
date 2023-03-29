@@ -35,16 +35,22 @@ export function activate(context: ExtensionContext) {
 	const codelensProvider = new CodelensProvider(combined);
 
 	languages.registerCodeLensProvider("*", codelensProvider);
+	workspace.getConfiguration("guidsniffer").update("GUIDSnifferEnabled", true, true);
 
-	commands.registerCommand("codelens-sample.enableCodeLens", () => {
-		workspace.getConfiguration("codelens-sample").update("enableCodeLens", true, true);
+	commands.registerCommand("guidsniffer.enableGUIDSniffer", () => {
+		workspace.getConfiguration("guidsniffer").update("GUIDSnifferEnabled", true, true);
 	});
 
-	commands.registerCommand("codelens-sample.disableCodeLens", () => {
-		workspace.getConfiguration("codelens-sample").update("enableCodeLens", false, true);
+	commands.registerCommand("guidsniffer.disableGUIDSniffer", () => {
+		workspace.getConfiguration("guidsniffer").update("GUIDSnifferEnabled", false, true);
 	});
 
-	commands.registerCommand("codelens-sample.codelensAction", (args: any) => {
+	commands.registerCommand("guidsniffer.showGUIDSnifferStatus", () => {
+		const status = workspace.getConfiguration("guidsniffer").get("GUIDSnifferEnabled", 'unknown');
+		window.showInformationMessage(`GUID Sniffer enabled in workspace: ${status}`);
+	});
+
+	commands.registerCommand("guidsniffer.openURL", (args: any) => {
 		if(args) {
 			commands.executeCommand('vscode.open', Uri.parse(args));
 			window.showInformationMessage(`GUID Sniffer opening URL ${args}`);
